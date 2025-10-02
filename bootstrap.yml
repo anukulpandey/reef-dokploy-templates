@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   reef-bootnode:
     image: anukulpandey/reef-node:latest
@@ -6,21 +8,12 @@ services:
     restart: unless-stopped
     volumes:
       - ./bootnode-db:/reef-data
+    entrypoint: sh -c
     command: >
-      sh -c "
-        wget -qO /reef-data/customSpec.json https://raw.githubusercontent.com/anukulpandey/reef-pelagia-testnet-customSpec.json/main/customSpec.json &&
-        reef-node build-spec --disable-default-bootnode --chain /reef-data/customSpec.json --raw > /reef-data/customSpecRaw.json &&
-        reef-node
-          --base-path /reef-data
-          --chain /reef-data/customSpecRaw.json
-          --port 30933
-          --rpc-port 9964
-          --no-telemetry
-          --validator
-          --rpc-methods Unsafe
-          --name bootnode
-          --rpc-cors all
-          --rpc-external
+      "
+      wget -qO /reef-data/customSpec.json https://raw.githubusercontent.com/anukulpandey/reef-pelagia-testnet-customSpec.json/main/customSpec.json &&
+      reef-node build-spec --disable-default-bootnode --chain /reef-data/customSpec.json --raw > /reef-data/customSpecRaw.json &&
+      reef-node --base-path /reef-data --chain /reef-data/customSpecRaw.json --port 30933  --rpc-port 9964  --no-telemetry --validator  --rpc-methods Unsafe --name bootnode --rpc-cors all --rpc-external 
       "
     ports:
       - "30933:30933"
