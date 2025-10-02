@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+  reef-node:
+    image: anukulpandey/reef-node:latest
+    container_name: reef-bootnode
+    restart: unless-stopped
+    environment:
+      - BASE_PATH=/data
+      - NAME=bootnode
+      - CHAIN_SPEC_URL=https://raw.githubusercontent.com/anukulpandey/reef-pelagia-testnet-customSpec.json/main/customSpec.json
+    volumes:
+      - ./bootnode-db:/data
+    command: >
+      sh -c "
+        # Download customSpec.json
+        wget -qO /data/customSpec.json $CHAIN_SPEC_URL &&
+
+        # Build raw chain spec
+        /reef-node build-spec --disable-default-bootnode --chain /data/customSpec.json --raw > /data/customSpecRaw.json &&
+
+        # Start node with raw spec
+        /reef-node
+          --base-path $BASE_PATH
+          --chain /data/customSpecRaw.json
+          --port 30333
+          --rpc-port 9944
+          --no-telemetry
+          --validator
+          --rpc-methods Unsafe
+          --name $NAME
+          --rpc-cors all
+          --rpc-external
+      "
+    ports:
+      - "30333:30333"
+      - "9944:9944"
