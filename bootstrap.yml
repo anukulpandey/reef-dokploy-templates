@@ -4,25 +4,21 @@ services:
     platform: linux/amd64
     container_name: reef-bootnode
     restart: unless-stopped
-    environment:
-      BASE_PATH: /data
-      NAME: bootnode
-      CHAIN_SPEC_URL: https://raw.githubusercontent.com/anukulpandey/reef-pelagia-testnet-customSpec.json/main/customSpec.json
     volumes:
-      - ./bootnode-db:/data
+      - ./bootnode-db:/reef-data
     command: >
       sh -c "
-        wget -qO /data/customSpec.json $CHAIN_SPEC_URL &&
-        reef-node build-spec --disable-default-bootnode --chain /data/customSpec.json --raw > /data/customSpecRaw.json &&
+        wget -qO /reef-data/customSpec.json https://raw.githubusercontent.com/anukulpandey/reef-pelagia-testnet-customSpec.json/main/customSpec.json &&
+        reef-node build-spec --disable-default-bootnode --chain /reef-data/customSpec.json --raw > /reef-data/customSpecRaw.json &&
         reef-node
-          --base-path $BASE_PATH
-          --chain /data/customSpecRaw.json
+          --base-path /reef-data
+          --chain /reef-data/customSpecRaw.json
           --port 30933
           --rpc-port 9964
           --no-telemetry
           --validator
           --rpc-methods Unsafe
-          --name $NAME
+          --name bootnode
           --rpc-cors all
           --rpc-external
       "
