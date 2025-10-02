@@ -17,8 +17,8 @@ services:
         reef-node
           --base-path $BASE_PATH
           --chain /data/customSpecRaw.json
-          --port 30333
-          --rpc-port 9944
+          --port 30933
+          --rpc-port 9964
           --no-telemetry
           --validator
           --rpc-methods Unsafe
@@ -27,5 +27,5 @@ services:
           --rpc-external
       "
     ports:
-      - "30933:30333"
-      - "9964:9944"
+      - "30933:30933"
+      - "9964:9964"
