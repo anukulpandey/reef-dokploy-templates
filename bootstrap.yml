@@ -16,6 +16,7 @@ services:
     entrypoint: sh -c
     command: >
       "wget -qO /reef-data/customSpec.json $CHAIN_SPEC_URL &&
+      reef-node build-spec --disable-default-bootnode --chain /reef-data/customSpec.json --raw > /reef-data/customSpecRaw.json &&
       reef-node --base-path /reef-data --chain /reef-data/customSpecRaw.json --port $P2P_PORT --rpc-port $RPC_PORT --no-telemetry --name $NODE_NAME --rpc-cors all --rpc-external"
     ports:
       - "${P2P_PORT}:${P2P_PORT}"
